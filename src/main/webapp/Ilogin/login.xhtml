@@ -1,0 +1,68 @@
+<ui:composition template="/WEB-INF/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:sec="http://www.springframework.org/security/tags">
+	
+	<ui:define name="content"> 
+
+	<div align="center">		
+		<h:form id="LoginForm"  prependId="false" styleClass="card">
+			
+				<div class="card-header">
+					<h3 style="color:green;"><h:outputText value="Authentification" styleClass="xteDetailLabel" /></h3>
+					<div class="d-flex justify-content-end social_icon">
+						<span><i class="fab fa-facebook-square"></i></span>
+						<span><i class="fab fa-google-plus-square"></i></span>
+						<span><i class="fab fa-twitter-square"></i></span>
+					</div>
+				</div>
+			
+			<table cellspacing="0" >
+				<tr>
+					<td class="label_name">
+						<h:outputText value="Login:" styleClass="xteDetailLabel" /></td>		
+				</tr>
+				<tr>				
+					<td>
+						<div class="input-group-loginform form-group">
+							<div class="input-group-loginform-prepend">
+								<span class="input-group-loginform-text"><i class="pi pi-user btn"></i></span>
+							</div>
+							<div class="input-group-loginform-append">
+								<h:inputText id="j_username" required="true" styleClass="form-control"
+									requiredMessage="* Vous devez saisir votre login" />
+							</div>
+						</div>			
+					</td>
+				</tr>
+				<tr>
+					<td class="label_name" style="padding-top:10px;">
+						<h:outputText value="Password:" styleClass="xteDetailLabel" /><br /></td>		
+				</tr>
+				<tr >
+					<td >			
+					<div class="input-group-loginform form-group">
+						<div class="input-group-loginform-prepend"> 
+							<span class="input-group-loginform-text"><i class="pi pi-lock btn"></i></span>
+						</div>
+						<div class="input-group-loginform-append">
+							<h:inputSecret id="j_password" required="true" styleClass="form-control"
+								requiredMessage="* Vous devez saisir votre mot de passe" />
+						</div>
+					</div>				
+					</td>
+				</tr>
+			</table>
+
+				<div>
+				<h:commandButton type="submit" id="login" styleClass="ui-button"
+					action="#{loginBean.check}" value="Connexion" />
+				</div>
+		</h:form>
+	</div> 
+
+	</ui:define>
+</ui:composition>

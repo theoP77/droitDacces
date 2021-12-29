@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<documents rootPath="/ProjetXtensus" byHomeFolder="no"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="config.xsd">
+
+
+	<document name="doc" mimetype="application/pdf">
+		<parameters>
+			<parameter name="document" />
+		</parameters>
+		<documentname separator="_">
+			<nameElement parameterRef="document" paramLenght="3">Doc</nameElement>
+		</documentname>
+		<parentpath>
+			<pathElement parameterRef="document" paramLenght="3">Doc</pathElement>
+		</parentpath>
+		<backuppath>
+			<backupElement parameterRef="document" paramLenght="3">Doc</backupElement>
+			<folder name="backups" />
+		</backuppath>
+	</document>
+
+
+</documents>

@@ -1,0 +1,66 @@
+<!DOCTYPE html >
+<html xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html">
+    <h:head>
+        <meta charset="UTF-8" />
+        <link rel="stylesheet" type="text/css" 
+              href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+        <title><ui:insert name="title">XtensusProject LDAP-SSO</ui:insert></title>
+    </h:head>
+    <h:body>
+        <header class="jumbotron text-center">
+            <div class="container">
+                <div class="row">
+                    <a href="faces/index.xhtml" class="col-md-2">
+                        <img src="images/logo.png" alt="Site logo" title="Retour à la page principale" />
+                    </a>
+                    <h1  class="col-md-10 text-center">
+                      <ui:insert name="title">Xtensus Project LDAP-SSO 2020-2021</ui:insert>
+                    </h1>
+                </div>
+            </div>
+        </header>
+        
+
+        <div class="container">
+            <div class="row">
+                <nav class="navbar col-md-12" style="margin-bottom: 30px;"> 
+                    <a href="../Ilogin/login.xhtml">Logout</a>
+                    <a href="urgenceGestion.xhtml">GestionUrgence</a>
+                    <a href="annotationGestion.xhtml">GestionAnnotation</a>
+                    <a href="xteInterfaceGestion.xhtml">GestionInterfaces</a>
+                    <a href="xteButonGestion.xhtml">GestionBoutons</a>
+                    <a href="privilegeGestion.xhtml">GestionPrivilège</a>  
+                </nav>
+            </div>
+        </div>
+        
+        <br/><br/>
+
+        <footer class="jumbotron text-center">
+<!--             <h2 style="margin-bottom: 20px;">
+                Ici, nous avons un pied de page<br/>avec des liens quelconques.
+            </h2> -->
+            
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4">
+                        <a href="#">Link 1</a><br/>
+                        <a href="#">Link 2</a><br/>
+                        <a href="#">Link 3</a>
+                    </div>            
+                    <div class="col-md-4">
+                        <a href="#">Link 4</a><br/>
+                        <a href="#">Link 5</a><br/>
+                        <a href="#">Link 6</a>
+                    </div>            
+                    <div class="col-md-4">
+                        <a href="#">Link 7</a><br/>
+                        <a href="#">Link 8</a><br/>
+                        <a href="#">Link 9</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </h:body>
+</html>

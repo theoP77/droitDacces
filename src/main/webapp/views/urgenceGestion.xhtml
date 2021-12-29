@@ -1,0 +1,267 @@
+<ui:composition template="/WEB-INF/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:sec="http://www.springframework.org/security/tags">
+	<ui:define name="content">
+		
+	<sec:authorize  access="hasRole('ROLE_ROLE_STATISTIQUE')">	
+		 ROLE_STATISTIQUE
+	</sec:authorize> 
+	<sec:authorize  access="hasRole('ROLE_ROLE_SAUVEGARDE')">
+		 ROLE_ADMIN
+	</sec:authorize>
+	
+		<p:panel styleClass="rich-panel tool-bar">
+			<h:form>
+				<div>
+					<p:commandLink id="retour"
+						onclick="document.location.href='index.jsf'">
+						<i class="pi pi-arrow-left btn-primary btn btn-sm"></i>
+					</p:commandLink>
+					<p:tooltip for="retour" value="#{msg.Retour}" direction="top-right" />			
+			 <sec:authorize  access="hasRole('ROLE_ROLE_SAUVEGARDE')"> 
+					<p:commandLink id="upd1" update="accoruser1" 
+						action="#{urgenceGestionBean.viderchamp}" ajax="false">
+						<i class="pi pi-plus btn-success btn btn-sm"></i>
+					</p:commandLink>
+					<p:tooltip for="upd1" value="#{msg.labelAjoutUrgence}"
+						direction="top-right" />
+			 </sec:authorize>  
+				</div>
+			</h:form>
+		</p:panel>
+				
+		<p:panel id="accor1" style="display:#{urgenceGestionBean.hideAccor};">
+			<f:facet name="header">
+				<h:panelGrid columns="3">
+					<h:outputText value="#{urgenceGestionBean.titleaccor}"
+						styleClass="xteEnregistrementLabelOutput" />
+				</h:panelGrid>
+			</f:facet>
+			<p:growl id="growl" sticky="true" />
+			<h:form id="accoruser1">
+				<table width="100%">
+					<tr>
+						<td width="50%" valign="top"><h:panelGrid columns="2">
+								<p:column>
+									<h:outputText value="#{msg.urgenceGestionLibelle} :"
+										styleClass="xteDetailLabel" />
+									<h:outputText value="*" styleClass="error" />
+								</p:column>
+								<p:column>
+									<p:inputText id="Nom"
+										value="#{urgenceGestionBean.urgence.urgenceLibelle}"
+										required="true"
+										requiredMessage="* #{msg.urgenceGestionLibelle} #{msg.champsobligatoire}"
+										maxlength="30" />
+								</p:column>
+								<p:column>
+									<h:outputText value="#{msg.urgenceGestionDescription} :"
+										styleClass="xteDetailLabel" />
+									<p:spacer width="5" />
+								</p:column>
+								<p:inputTextarea id="Description"
+									value="#{urgenceGestionBean.urgence.urgenceDescription}"
+									styleClass="xteDetailLabelTextArea" rows="2"
+									style=" width : 200px;" />
+							</h:panelGrid></td>
+						<td width="50%" valign="top"><h:panelGrid columns="2">
+								<p:column>
+									<h:outputText value="#{msg.armoireLibelleAr} :"
+										styleClass="xteDetailLabel" />
+									<p:spacer width="10" />
+									<h:outputText value="*" styleClass="error" />
+								</p:column>
+								<p:column>
+									<p:inputText id="LibelleAr"
+										value="#{urgenceGestionBean.urgence.urgenceLibelleAr}"
+										required="true"
+										requiredMessage="* #{msg.armoireLibelleAr} #{msg.champsobligatoire}" />
+								</p:column>
+								<p:column>
+									<h:outputText value="#{msg.descriptionAr} :"
+										styleClass="xteDetailLabel" />
+									<p:spacer width="5" />
+								</p:column>
+								<p:inputTextarea id="DescriptionAr"
+									value="#{urgenceGestionBean.urgence.urgenceDescriptionAr}"
+									styleClass="xteDetailLabelTextArea" rows="2"
+									style=" width : 200px;" />
+							</h:panelGrid></td>
+					</tr>
+				</table>
+				<div align="center">
+					<p:commandButton id="btnAjout"
+						update="formDialog:dialogAjout,growl"
+						action="#{urgenceGestionBean.save}"
+						style="display:#{urgenceGestionBean.divajouter};"
+						value="#{msg.buttonAjouter}"
+						oncomplete="if (args &amp;&amp; !args.validationFailed) PF('dialogAjout').show()">
+					</p:commandButton>
+				
+					<p:commandButton id="btnModif" 
+						update="formDialog:dialogModif,growl"
+						action="#{urgenceGestionBean.updateSelectedRow}"
+						style="display:#{urgenceGestionBean.divmodifier};"
+						value="#{msg.buttonModifier}"
+						oncomplete="if (args &amp;&amp; !args.validationFailed) PF('dialogModif').show()">
+					</p:commandButton>						
+				</div>
+			</h:form>
+		</p:panel>
+		
+		<p:panel id="panelDatatable">
+			<f:facet name="header">
+				<h:panelGrid columns="3">
+					<h:outputText value="#{msg.listUrgencefacet}"
+						styleClass="xteEnregistrementLabelOutput" />
+				</h:panelGrid>
+			</f:facet>
+			<h:form id="formDataTable">
+				<p:dataTable value="#{urgenceGestionBean.listUrgence}" var="urgence"
+					id="data" rows="5" paginator="true"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					currentPageReportTemplate="{startRecord}-{endRecord} #{msg.of} {totalRecords} #{msg.records}"
+					paginatorPosition="bottom"
+					rowsPerPageTemplate="5,10,{ShowAll|'Tous'}">
+					
+					<p:column width="10%" sortBy="#{urgence.urgenceId}"
+						filterBy="#{urgence.urgenceId}" filterEvent="onkeyup" label="ref">
+						<f:facet name="header">
+							<h:outputText value="#{msg.Reference}" />
+						</f:facet>
+						<div align="center">
+							<h:outputText value="#{urgence.urgenceId}" />
+						</div>
+					</p:column>
+					<p:column width="20%" sortBy="#{urgence.urgenceLibelle}"
+						filterBy="#{urgence.urgenceLibelle}" filterEvent="onkeyup"
+						label="label">
+						<f:facet name="header">
+							<h:outputText value="#{msg.libelle1}" />
+						</f:facet>
+						<h:outputText value="#{urgence.urgenceLibelle}" />
+					</p:column>
+					<p:column sortBy="#{urgence.urgenceDescription}"
+						filterBy="#{urgence.urgenceDescription}" filterEvent="onkeyup"
+						label="label">
+						<f:facet name="header">
+							<h:outputText value="#{msg.comment}" />
+						</f:facet>
+						<h:outputText value="#{urgence.urgenceDescription}" />
+					</p:column>
+					<p:column width="20%" sortBy="#{urgence.urgenceLibelleAr}"
+						filterBy="#{urgence.urgenceLibelleAr}" filterEvent="onkeyup"
+						label="label">
+						<f:facet name="header">
+							<h:outputText value="#{msg.armoireLibelleAr}" />
+						</f:facet>
+						<h:outputText value="#{urgence.urgenceLibelleAr}" />
+					</p:column>
+					<p:column width="10%">
+						<f:facet name="header">
+							<h:outputText value="#{msg.operation}" />
+						</f:facet>
+						<center>
+					<sec:authorize  access="hasRole('ROLE_ROLE_SAUVEGARDE')"> 
+						<p:commandLink id="ed" 
+							action="#{urgenceGestionBean.getSelectionRow(urgence)}" 
+							update="accoruser1,accor1">
+							<i class="pi pi-pencil btn-info btn btn-xs"></i>
+						</p:commandLink>				
+						<p:commandLink id="del"
+							update="formDialog:dialogDelete,formDialog:dialogDelete"
+							action="#{urgenceGestionBean.getSelectionRowDel}"
+							oncomplete="PF('dialogDelete').show()">
+							<i class="pi pi-times btn-danger btn btn-xs"></i>
+						</p:commandLink>
+					</sec:authorize>
+						</center>
+					</p:column>
+				</p:dataTable>
+			</h:form>
+		</p:panel>
+		<h:form id="formDialog">
+			<p:dialog header="#{msg.labelInfo}" widgetVar="dialog" minHeight="40"
+				id="dialogAjout" width="500px" height="100px"
+				visible="#{urgenceGestionBean.status}" model="true">
+				<table align="center">
+					<tr align="center">
+						<td align="center"><h:outputText value="#{msg.confirmInsert}"
+								styleClass="xtePopupInformationTextHeader"></h:outputText></td>
+					</tr>
+				</table>
+				<br />
+				<div align="center">
+					<p:commandButton action="#{urgenceGestionBean.reinitialiser}"
+						value="#{msg.bouttonOk}" type="submit"
+						onclick="PF('dialogAjout').hide()"
+						update="panelDatatable,formDataTable:data,accoruser1" />
+				</div>
+			</p:dialog>
+			<p:dialog header="#{msg.labelInfo}" widgetVar="dialog2"
+				minHeight="40" id="dialogModif" width="500px" height="100px"
+				visible="#{urgenceGestionBean.status1}" model="true">
+				<table align="center">
+					<tr align="center">
+						<td align="center"><h:outputText value="#{msg.ModifMsg}"></h:outputText>
+						</td>
+					</tr>
+				</table>
+				<br />
+				<div align="center">
+					<p:commandButton action="#{urgenceGestionBean.reinitialiser}"
+						value="#{msg.bouttonOk}" type="submit"
+						onclick="PF('dialogModif').hide()"
+						update="panelDatatable,formDataTable:data,accoruser1" />
+				</div>
+			</p:dialog>
+			
+			<p:dialog id="dialogDelete" header="#{msg.labelConfirm}"
+				severity="alert" widgetVar="confirmation"
+				visible="#{urgenceGestionBean.status4}" width="500px" height="100px"
+				model="true">
+				<table align="center">
+					<tr align="center">
+						<td align="center"><h:outputText value="#{msg.confirmDelete}"></h:outputText>
+						</td>
+					</tr>
+				</table>
+				<br />
+				<div align="center">
+					<p:commandButton value="#{msg.buttonOui}"
+						onclick="PF('dialogDelete').hide()"
+						action="#{urgenceGestionBean.deleteSelectedRow}"
+						oncomplete="PF('dialogDelErr').show()" type="submit"
+						update="dialogDelErr,panelDatatable,formDataTable:data,accoruser1" />
+					<p:spacer width="10" />
+					<p:commandButton value="#{msg.buttonNon}"
+						onclick="PF('dialogDelete').hide()" type="submit"
+						update="panelDatatable,formDataTable:data,accoruser1" />
+				</div>
+			</p:dialog>
+			<p:dialog header="#{msg.labelError}" widgetVar="dialog3"
+				minHeight="40" id="dialogDelErr" width="500px" height="100px"
+				visible="#{urgenceGestionBean.status5}" model="true">
+				<table align="center">
+					<tr align="center">
+						<td align="center"><h:outputText
+								value="#{msg.erreurSuppression}"></h:outputText></td>
+					</tr>
+				</table>
+				<br />
+				<div align="center">
+					<p:commandButton action="#{urgenceGestionBean.reinitialiser}"
+						value="#{msg.bouttonOk}" type="submit"
+						onclick="PF('dialogDelErr').hide()"
+						update="panelDatatable,formDataTable:data,accoruser1" />
+				</div>
+			</p:dialog>
+		</h:form>
+		
+	</ui:define>
+</ui:composition>
+	

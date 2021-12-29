@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns:sec="http://www.springframework.org/schema/security"
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+						https://www.springframework.org/schema/beans/spring-beans.xsd
+                        http://www.springframework.org/schema/security 
+                        https://www.springframework.org/schema/security/spring-security.xsd">
+	<bean id="contextSource"
+			class="org.springframework.security.ldap.DefaultSpringSecurityContextSource">
+			<constructor-arg value="ldap://192.168.1.29:389/dc=xtensus,dc=com"/>		
+			<property name="userDn" value="cn=admin,dc=xtensus,dc=com"/>
+			<property name="password" value="theo"/>
+	</bean>
+    <!-- c'est le bean principale pour Integrer Spring Security with Ldap-->
+	<bean id="ldapAuthenticationProvider"
+		class="org.springframework.security.ldap.authentication.LdapAuthenticationProvider">		
+	<constructor-arg>
+       <bean class="org.springframework.security.ldap.authentication.BindAuthenticator">
+           	<constructor-arg ref="contextSource"/>
+           		<property name="userSearch">
+           		<bean id="userSearch"
+						class="org.springframework.security.ldap.search.FilterBasedLdapUserSearch">
+						<constructor-arg index="0" value="o=XteUsers" />
+						<constructor-arg index="1" value="(displayName={0})" />
+						<constructor-arg index="2" ref="contextSource" />
+				</bean>
+			</property>
+		</bean>
+    </constructor-arg> 
+     <constructor-arg>
+       <bean class="org.springframework.security.ldap.userdetails.DefaultLdapAuthoritiesPopulator">
+      	<constructor-arg ref="contextSource" />
+				<constructor-arg value="o=XteGroups" />
+				<property name="groupSearchFilter" value="(member={0})" />
+				<property name="searchSubtree" value="true" />
+				<property name="convertToUpperCase" value="true" />
+				<property name="rolePrefix" value="ROLE_" />
+				<property name="groupRoleAttribute" value="sn" />
+       </bean>
+     </constructor-arg>
+		<!-- classe defini par xtensus -->
+		<property name="userDetailsContextMapper">
+			<bean class="com.xtensus.ldap.utils.CustomUserDetailsContextMapper" />
+		</property>
+		
+	</bean>
+	<!-- messageProperties -->
+	<bean id="messageSource"
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basenames">
+			<list>
+				<value>classpath:messages</value>
+			</list>
+		</property>
+	</bean>
+    <!-- c'est le point d'entré de spring security qui va lancé tout -->
+	<sec:authentication-manager>
+		<sec:authentication-provider ref="ldapAuthenticationProvider" />
+	</sec:authentication-manager>
+
+<!-- l'ordre est trés important pour les intercepts URL  -->
+<!-- use-expressions="true" est obligatoire pour que Spring Sec comprendre les expression "permitAll,isAuthenticated -->
+	
+	<sec:http auto-config="true" 
+		use-expressions="true">
+      <sec:csrf disabled="true"/>
+
+		<sec:intercept-url pattern="/framGraphique/**" access="permitAll" />
+		<sec:intercept-url pattern="/Ilogin/**" access="permitAll" />
+		<sec:intercept-url pattern="/**" access="isAuthenticated()" />
+		<sec:intercept-url pattern="/Ilogin/**" access="permitAll" />
+		<sec:form-login login-page="/Ilogin/login.jsf"  
+			username-parameter="j_username"  password-parameter="j_password" 
+		 	login-processing-url="/j_spring_security_check"
+		 	default-target-url="/views/index.jsf"
+			authentication-failure-url="/Ilogin/failure.jsf"
+			always-use-default-target="true" />
+		<sec:logout logout-success-url="/Ilogin/login.jsf"
+			invalidate-session="true" />
+	</sec:http>
+
+<sec:global-method-security pre-post-annotations="enabled"/>
+
+</beans>

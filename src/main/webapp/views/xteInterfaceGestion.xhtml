@@ -1,0 +1,309 @@
+<ui:composition template="/WEB-INF/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:sec="http://www.springframework.org/security/tags">
+	<ui:define name="content">
+	
+	<sec:authorize  access="hasRole('ROLE_ROLE_STATISTIQUE')">
+		 ROLE_STATISTIQUE
+	</sec:authorize> 
+	<sec:authorize  access="hasRole('ROLE_ROLE_SAUVEGARDE')">
+		 ROLE_ADMIN
+	</sec:authorize>
+
+		<p:panel styleClass="rich-panel tool-bar">
+			<h:form>
+				<div>
+					<p:spacer width="5px" />
+					<p:commandLink id="retour"
+						onclick="document.location.href='index.jsf'">
+						<i class="pi pi-arrow-left btn-primary btn btn-sm"></i>
+					</p:commandLink>
+					<p:tooltip for="retour" value="#{msg.Retour}" direction="top-right" />
+					<p:spacer width="5px" />
+			 <sec:authorize  access="hasRole('ROLE_ROLE_SAUVEGARDE')">   
+					<p:commandLink id="upd1" update="accor1,accoruser1"
+						action="#{xteInterfaceGestionBean.viderchamp}">
+						<i class="pi pi-plus btn-success btn btn-sm"></i>
+					</p:commandLink>
+					<p:tooltip for="upd1" direction="top-right"
+						value="#{msg.labelAjoutXteInterface}" />
+	 		 </sec:authorize>  
+				</div>
+			</h:form>
+		</p:panel>
+
+		<p:panel id="accor1" styleClass="rich-panel"
+			style="display:#{xteInterfaceGestionBean.hideAccor};">
+			<f:facet name="header">
+				<h:panelGrid columns="3">
+					<h:outputText value="#{xteInterfaceGestionBean.titleaccor}"
+						styleClass="xteEnregistrementLabelOutput" />
+				</h:panelGrid>
+			</f:facet>
+			<p:growl id="growl" sticky="true" />
+
+			<h:form id="accoruser1"
+				style="display:#{xteInterfaceGestionBean.hideAccor};">
+				<table width="100%">
+					<tr>
+						<td width="35%" valign="top"><h:panelGrid columns="2">
+								<p:column>
+									<h:outputText value="#{msg.xteInterfaceGestionLibelle} :"
+										styleClass="xteDetailLabel" />
+									<p:spacer width="5" />
+									<h:outputText value="*" styleClass="error" />
+								</p:column>
+									<p:inputText id="Nom"
+										value="#{xteInterfaceGestionBean.xteInterface.xteInterfaceLibelle}"
+										required="true"
+										requiredMessage="* #{msg.libelle1} #{msg.champsobligatoire}"
+										maxlength="30" />
+								<p:column>
+									<h:outputText value="#{msg.xteInterfaceGestionCode} :"
+										styleClass="xteDetailLabel" />
+									<p:spacer width="5" />
+								</p:column>
+									<p:inputTextarea id="Code"
+										value="#{xteInterfaceGestionBean.xteInterface.xteInterfaceCode}"
+										styleClass="xteDetailLabelTextArea" rows="2"
+										style=" width : 200px;" />
+								</h:panelGrid></td>
+						<td width="35%" valign="top"><h:panelGrid columns="2">
+								<p:column>
+									<h:outputText value="#{msg.armoireLibelleAr} :"
+										styleClass="xteDetailLabel" />
+									<p:spacer width="10" />
+									<h:outputText value="*" styleClass="error" />
+								</p:column>
+								<p:inputText id="NomAr"
+									value="#{xteInterfaceGestionBean.xteInterface.xteInterfaceLibelleAr}"
+									required="true"
+									requiredMessage="* #{msg.armoireLibelleAr} #{msg.champsobligatoire}"
+									maxlength="30" />
+									
+								<p:column>
+									<h:outputText value="#{msg.codeAr} :"
+										styleClass="xteDetailLabel" />
+									<p:spacer width="5" />
+								</p:column>
+								<p:inputTextarea id="CodeAr"
+									value="#{xteInterfaceGestionBean.xteInterface.xteInterfaceCodeAr}"
+									styleClass="xteDetailLabelTextArea" rows="2"
+									style=" width : 200px;" />
+							</h:panelGrid></td>
+						<td width="30%" valign="top"><h:panelGrid columns="2">
+							<p:column>
+									<h:outputText value="#{msg.pagexhtml} :"
+										styleClass="xteDetailLabel" />
+									<p:spacer width="5" />
+								</p:column>
+								<p:inputTextarea id="Xhtml"
+									value="#{xteInterfaceGestionBean.xteInterface.xteInterfaceXhtml}"
+									styleClass="xteDetailLabelTextArea" rows="2"
+									style=" width : 200px;" />
+							</h:panelGrid></td>					
+					</tr>
+				</table>
+				<p:spacer height="10" />
+				<div align="center">
+					<p:commandButton id="btnAjout" update="growl,formDialog:msgPanal"
+						style="display:#{xteInterfaceGestionBean.divajouter};"
+						value="#{msg.buttonAjouter}" type="submit"
+						action="#{xteInterfaceGestionBean.save}"
+						oncomplete="if (args &amp;&amp; !args.validationFailed) PF('msgPanal').show();">
+					</p:commandButton>
+					<p:commandButton id="btnModif"
+						style="display:#{xteInterfaceGestionBean.divmodifier};"
+						value="#{msg.buttonModifier}" type="submit"
+						action="#{xteInterfaceGestionBean.updateSelectedRow}"
+						oncomplete="if (args &amp;&amp; !args.validationFailed) PF('askUpdate').show();"
+						update="growl,formDialog:askUpdate">
+					</p:commandButton>
+				</div>
+				
+			</h:form>
+			</p:panel>
+
+		<p:panel styleClass="rich-panel tool-bar" id="panelDataTable">
+			<f:facet name="header">
+				<h:panelGrid columns="3">
+					<h:outputText value="#{msg.listXteInterfacefacet}"
+						styleClass="xteEnregistrementLabelOutput" />
+				</h:panelGrid>
+			</f:facet>
+			
+			<h:form id="formDataTable">
+				<p:dataTable paginator="true"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					currentPageReportTemplate="{startRecord}-{endRecord} #{msg.of} {totalRecords} #{msg.records}"
+					paginatorPosition="bottom"
+					rowsPerPageTemplate="5,10,25,{ShowAll|'Tous'}"
+					value="#{xteInterfaceGestionBean.listXteInterface}"
+					var="xteInterface" id="data" rows="5" styleClass="rich-panel">
+					
+					<p:column width="10%" sortBy="#{xteInterface.xteInterfaceRef}"
+						filterBy="#{xteInterface.xteInterfaceRef}" filterEvent="onkeyup"
+						label="ref">
+						<f:facet name="header">
+							<h:outputText value="#{msg.Reference}" />
+						</f:facet>
+						<div align="center">
+							<h:outputText value="#{xteInterface.xteInterfaceRef}" />
+						</div>
+					</p:column>
+					<p:column sortBy="#{xteInterface.xteInterfaceLibelle}"
+						filterBy="#{xteInterface.xteInterfaceLibelle}"
+						filterEvent="onkeyup" label="label">
+						<f:facet name="header">
+							<h:outputText value="#{msg.libelle1}" />
+						</f:facet>
+						<h:outputText value="#{xteInterface.xteInterfaceLibelle}"
+							rendered="#{xteInterfaceGestionBean.xteInterfaceLibelleShowFr}" />
+						<h:outputText value="#{xteInterface.xteInterfaceLibelleAr}"
+							rendered="#{xteInterfaceGestionBean.xteInterfaceLibelleShowAr}" />
+					</p:column>
+					<p:column sortBy="#{xteInterface.xteInterfaceCode}"
+						filterBy="#{xteInterface.xteInterfaceCode}" filterEvent="onkeyup"
+						label="label">
+						<f:facet name="header">
+							<h:outputText value="#{msg.code}" />
+						</f:facet>
+						<h:outputText value="#{xteInterface.xteInterfaceCode}"
+							rendered="#{xteInterfaceGestionBean.xteInterfaceCodeShowFr}" />
+						<h:outputText value="#{xteInterface.xteInterfaceCodeAr}"
+							rendered="#{xteInterfaceGestionBean.xteInterfaceCodeShowAr}" />
+					</p:column>
+					<p:column sortBy="#{xteInterface.xteInterfaceLibelleAr}"
+						filterBy="#{xteInterface.xteInterfaceLibelleAr}"
+						filterEvent="onkeyup" label="label">
+						<f:facet name="header">
+							<h:outputText value="#{msg.armoireLibelleAr}" />
+						</f:facet>
+						<h:outputText value="#{xteInterface.xteInterfaceLibelleAr}"
+							rendered="#{xteInterfaceGestionBean.xteInterfaceLibelleShowFr}" />
+						<h:outputText value="#{xteInterface.xteInterfaceLibelleAr}"
+							rendered="#{xteInterfaceGestionBean.xteInterfaceLibelleShowAr}" />
+					</p:column>
+					<p:column sortBy="#{xteInterface.xteInterfaceXhtml}"
+						filterBy="#{xteInterface.xteInterfaceXhtml}" filterEvent="onkeyup"
+						label="label">
+						<f:facet name="header">
+							<h:outputText value="#{msg.xhtml}" />
+						</f:facet>
+						<h:outputText value="#{xteInterface.xteInterfaceXhtml}" />
+					</p:column>
+
+					<p:column width="10%">
+						<f:facet name="header">
+							<h:outputText value="#{msg.operation}" />
+						</f:facet>
+						<center>
+					<!-- <sec:authorize  access="hasRole('ROLE_Role super Admin SONEDE')"> -->	
+							<p:commandLink id="sea"
+								action="#{xteInterfaceGestionBean.findSelectedRow}"
+								update="accor1,accoruser1">
+								<i class="pi pi-search btn-info btn btn-xs"></i>
+							</p:commandLink>
+							<p:tooltip for="sea" value="#{msg.labelSearch}"
+								direction="top-right" />
+					<sec:authorize  access="hasRole('ROLE_ROLE_SAUVEGARDE')"> 				
+							<p:commandLink id="ed"
+								action="#{xteInterfaceGestionBean.getSelectionRow}"
+								update="accor1,accoruser1">
+								<i class="pi pi-pencil btn-info btn btn-xs"></i>
+							</p:commandLink>
+							<p:tooltip for="ed" value="#{msg.labelEdit}"
+								direction="top-right" />						
+							<p:commandLink id="del"
+								action="#{xteInterfaceGestionBean.getSelectionRowDel}"
+								oncomplete="if (args &amp;&amp; !args.validationFailed) PF('askDelete').show();"
+								update="formDialog:askDelete">
+								<i class="pi pi-times btn-danger btn btn-xs"></i>
+							</p:commandLink>
+							<p:tooltip for="del" value="#{msg.labelDelete}"
+								direction="top-right" />
+					</sec:authorize> 
+						</center>
+					</p:column>				
+				</p:dataTable>
+			</h:form>
+		</p:panel>
+
+		<h:form id="formDialog">
+			<p:dialog header="#{msg.labelInfo}" widgetVar="dialog" minHeight="40"
+				id="msgPanal" width="500px" height="100px"
+				visible="#{xteInterfaceGestionBean.status}" model="true">
+				<table align="center">
+					<tr align="center">
+						<td align="center"><h:outputText value="#{msg.confirmInsert}"
+								styleClass="xtePopupInformationTextHeader"></h:outputText></td>
+					</tr>
+				</table>
+				<br />
+				<div align="center">
+					<p:commandButton value="#{msg.bouttonOk}" type="submit"
+						onclick="PF('msgPanal').hide()"
+						update="formDataTable:data,accoruser1,accor1" />
+				</div>
+			</p:dialog>
+			<p:dialog header="#{msg.labelInfo}" id="askUpdate" width="500px"
+				height="100px" visible="#{xteInterfaceGestionBean.status1}"
+				model="true">
+				<table align="center">
+					<tr>
+						<td align="center" colspan="2"><h:outputText
+								styleClass="xtePopupInformationText"
+								value="#{msg.confirmUpdate}" /></td>
+					</tr>
+				</table>
+				<br />
+				<div align="center">
+					<p:commandButton value="#{msg.buttonOk}"
+						onclick="PF('askUpdate').hide()" type="submit"
+						update="formDataTable:data,accoruser1,accor1" />
+				</div>
+			</p:dialog>
+			<p:dialog id="askDelete" header="#{msg.labelConfirm}"
+				severity="alert" width="500px" height="100px"
+				visible="#{xteInterfaceGestionBean.status4}" model="true">
+				<table align="center">
+					<tr align="center">
+						<td align="center"><h:outputText value="#{msg.confirmDelete}"
+								styleClass="xtePopupInformationTextHeader"></h:outputText></td>
+					</tr>
+				</table>
+				<br />
+				<div align="center">
+					<p:commandButton value="#{msg.buttonOui}" type="submit"
+						action="#{xteInterfaceGestionBean.deleteSelectedRow}"
+						onclick="PF('askDelete').hide()"
+						oncomplete="PF('dialogDelErr').show()"
+						update="formDataTable:data,panelDataTable,dialogDelErr" />
+					<p:spacer width="10" />
+					<p:commandButton value="#{msg.buttonNon}"
+						onclick="PF('askDelete').hide()" type="submit" />
+				</div>
+			</p:dialog>
+			<p:dialog header="#{msg.labelError}" widgetVar="dialog3"
+				minHeight="40" id="dialogDelErr" width="500px" height="100px"
+				visible="#{xteInterfaceGestionBean.status5}" model="true">
+				<table align="center">
+					<tr align="center">
+						<td align="center"><h:outputText
+								value="#{msg.erreurSuppression}"></h:outputText></td>
+					</tr>
+				</table>
+				<br />
+				<div align="center">
+					<p:commandButton value="#{msg.bouttonOk}" type="submit"
+						onclick="PF('dialogDelErr').hide() document.location.href='xteInterfaceGestion.jsf'" />
+				</div>
+			</p:dialog>
+		</h:form>
+
+	</ui:define>
+</ui:composition>

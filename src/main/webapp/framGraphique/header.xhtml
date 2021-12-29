@@ -1,0 +1,30 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:p="http://primefaces.org/ui"
+     xmlns:ui="http://java.sun.com/jsf/facelets">
+
+		<h:form id="form">
+			
+				
+				<div class="headerTranslation">	
+						<p:commandLink action="#{deconnexionBean.deconnexion}" ajaxSingle="true" styleClass="btn-danger btn btn-sm"
+							title="#{msg.Deconnexion}">
+							<i class="pi pi-user btn btn-sm"></i>
+							<h:outputText value="#{msg.Deconnexion}" />
+						</p:commandLink>
+				</div>
+				<div id="buttonHeader">
+					<p:commandLink id="buttonAr"
+						action="#{languageManager.setArabLanguage}" oncomplete="javascript:location.reload(true)"  >
+						<i class="pi btn-primary btn btn-sm">AR</i>
+					</p:commandLink>
+					<p:commandLink id="buttonFr"
+						action="#{languageManager.setFrenchLangauge}" oncomplete="javascript:location.reload(true)" >
+						<i class="pi btn-warning btn btn-sm">FR</i>
+					</p:commandLink>
+				</div>
+			
+		</h:form>
+
+</ui:composition>
